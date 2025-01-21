@@ -31,6 +31,7 @@ const onSearchFormSubmit = event => {
 
   fetchPhotosByQuery(searchedQuery)
     .then(data => {
+      console.dir(data);
       if (data.total === 0) {
         galleryEl.innerHTML = '';
         loaderEl.classList.add('is-hidden');
@@ -42,7 +43,7 @@ const onSearchFormSubmit = event => {
         return;
       }
 
-      const galleryTemplate = data.hits
+      const galleryTemplate = data.data.hits
         .map(el => createGalleryCardTempplate(el))
         .join('');
 

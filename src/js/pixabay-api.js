@@ -1,3 +1,9 @@
+import axios from 'axios';
+
+// const myApiKey = '48247224-415eb498da8da81883dddb739';
+
+// axios.defaults.headers.common['key'] = myApiKey;
+
 export const fetchPhotosByQuery = searchedQuery => {
   const searchParams = new URLSearchParams({
     key: '48247224-415eb498da8da81883dddb739',
@@ -7,12 +13,7 @@ export const fetchPhotosByQuery = searchedQuery => {
     safesearch: true,
   });
 
-  return fetch(`https://pixabay.com/api/?${searchParams.toString()}`).then(
-    response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    }
-  );
+  return axios({
+    url: `https://pixabay.com/api/?${searchParams}`,
+  });
 };

@@ -13,7 +13,5 @@ export const fetchPhotosByQuery = searchedQuery => {
     safesearch: true,
   });
 
-  return axios({
-    url: `https://pixabay.com/api/?${searchParams}`,
-  });
+  return axios.get(`https://pixabay.com/api/?${searchParams}`);
 };

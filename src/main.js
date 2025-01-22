@@ -58,44 +58,6 @@ const onSearchFormSubmit = async event => {
   } catch (err) {
     console.log(err);
   }
-
-  //     .then(data => {
-  //       console.dir(data);
-  //       if (data.total === 0) {
-  //         galleryEl.innerHTML = '';
-  //         loaderEl.classList.add('is-hidden');
-  //         iziToast.error({
-  //           position: 'topRight',
-  //           message:
-  //             'Sorry, there are no images matching your search query. Please try again!',
-  //         });
-  //         return;
-  //       }
-
-  //       const galleryTemplate = data.data.hits
-  //         .map(el => createGalleryCardTempplate(el))
-  //         .join('');
-
-  //       galleryEl.innerHTML = galleryTemplate;
-
-  //       const lightbox = new SimpleLightbox('.js-gallery a', {
-  //         captionsData: 'alt',
-  //         captionPosition: 'bottom',
-  //         animationSpeed: 250,
-  //       });
-  //       lightbox.refresh();
-  //     })
-  //     .catch(err => {
-  //       iziToast.error({
-  //         title: 'Error',
-  //         message: 'BAD REQUEST',
-  //         position: 'topRight',
-  //       });
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       loaderEl.classList.add('is-hidden');
-  //     });
 };
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);

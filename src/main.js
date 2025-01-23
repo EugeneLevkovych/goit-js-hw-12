@@ -10,13 +10,18 @@ import { fetchPhotosByQuery } from './js/pixabay-api';
 const searchFormEl = document.querySelector('.js-search-form');
 const galleryEl = document.querySelector('.js-gallery');
 const loaderEl = document.querySelector('.loader');
+const loadMoreButtonEl = document.querySelector('.load-more-btn');
 
+let page = 1;
+let searchedQuery = '';
+
+//-------Submit------
 const onSearchFormSubmit = async event => {
   try {
     event.preventDefault();
 
-    const searchedQuery = event.currentTarget.elements.user_query.value.trim();
-
+    searchedQuery = event.currentTarget.elements.user_query.value.trim();
+    console.log(searchedQuery);
     if (searchedQuery === '') {
       iziToast.error({
         position: 'topRight',
@@ -24,13 +29,17 @@ const onSearchFormSubmit = async event => {
       });
       return;
     }
+
+    page = 1;
+    loadMoreButtonEl.classList.add('is-hidden');
+
     galleryEl.innerHTML = '';
 
     loaderEl.classList.remove('is-hidden');
 
     searchFormEl.reset();
 
-    const response = await fetchPhotosByQuery(searchedQuery);
+    const response = await fetchPhotosByQuery(searchedQuery, page);
     if (response.data.total === 0) {
       galleryEl.innerHTML = '';
       loaderEl.classList.add('is-hidden');
@@ -42,6 +51,10 @@ const onSearchFormSubmit = async event => {
       return;
     }
 
+    if (response.data.totalHits > 1) {
+      loadMoreButtonEl.classList.remove('is-hidden');
+      loadMoreButtonEl.addEventListener('click', onLoadMoreBtnClick);
+    }
     const galleryTemplate = response.data.hits
       .map(el => createGalleryCardTempplate(el))
       .join('');
@@ -61,3 +74,27 @@ const onSearchFormSubmit = async event => {
 };
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
+
+const onLoadMoreBtnClick = async event => {
+  try {
+    page++;
+    const response = await fetchPhotosByQuery(searchedQuery, page);
+
+    const galleryTemplate = response.data.hits
+      .map(el => createGalleryCardTempplate(el))
+      .join('');
+
+    galleryEl.insertAdjacentHTML('beforeend', galleryTemplate);
+
+    if (page === response.data.totalHits) {
+      loadMoreButtonEl.classList.add('is-hidden');
+      loadMoreButtonEl.removeEventListener('click', onLoadMoreBtnClick);
+      iziToast.info({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

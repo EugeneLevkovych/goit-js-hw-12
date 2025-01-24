@@ -42,6 +42,7 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 40px;
+  margin-bottom: 40px;
 }
 .load-more-btn.is-hidden {
   display: none;
@@ -98,9 +99,13 @@
   height: 48px;
   border-radius: 50%;
   position: relative;
-  /* top: 25px;
-  left: 550px; */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   animation: rotate 1s linear infinite;
+}
+.loader-2 {
+  margin-top: 10px;
 }
 .loader::before,
 .loader::after {

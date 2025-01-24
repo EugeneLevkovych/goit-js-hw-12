@@ -9,19 +9,25 @@ import { fetchPhotosByQuery } from './js/pixabay-api';
 
 const searchFormEl = document.querySelector('.js-search-form');
 const galleryEl = document.querySelector('.js-gallery');
-const loaderEl = document.querySelector('.loader');
+const loaderEl = document.querySelector('.js-loader');
+const loaderEl2 = document.querySelector('.js-loader-2');
 const loadMoreButtonEl = document.querySelector('.load-more-btn');
 
 let page = 1;
 let searchedQuery = '';
 
-//-------Submit------
+const lightbox = new SimpleLightbox('.js-gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  animationSpeed: 250,
+});
+//-------Submit-------------------------------------------
 const onSearchFormSubmit = async event => {
   try {
     event.preventDefault();
 
     searchedQuery = event.currentTarget.elements.user_query.value.trim();
-    console.log(searchedQuery);
+
     if (searchedQuery === '') {
       iziToast.error({
         position: 'topRight',
@@ -61,22 +67,24 @@ const onSearchFormSubmit = async event => {
 
     galleryEl.innerHTML = galleryTemplate;
 
-    const lightbox = new SimpleLightbox('.js-gallery a', {
-      captionsData: 'alt',
-      captionPosition: 'bottom',
-      animationSpeed: 250,
-    });
     lightbox.refresh();
     loaderEl.classList.add('is-hidden');
   } catch (err) {
+    iziToast.error({
+      title: 'Error',
+      message: 'BAD REQUEST',
+      position: 'topRight',
+    });
     console.log(err);
+    loaderEl.classList.add('is-hidden');
   }
 };
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
-
-const onLoadMoreBtnClick = async event => {
+//----------------Load-more----------------------------
+const onLoadMoreBtnClick = async () => {
   try {
+    loaderEl2.classList.remove('is-hidden');
     page++;
     const response = await fetchPhotosByQuery(searchedQuery, page);
 
@@ -94,7 +102,17 @@ const onLoadMoreBtnClick = async event => {
         message: "We're sorry, but you've reached the end of search results.",
       });
     }
+
+    lightbox.refresh();
+
+    loaderEl2.classList.add('is-hidden');
   } catch (err) {
+    iziToast.error({
+      title: 'Error',
+      message: 'BAD REQUEST',
+      position: 'topRight',
+    });
     console.log(err);
+    loaderEl2.classList.add('is-hidden');
   }
 };

@@ -26,6 +26,8 @@ const onSearchFormSubmit = async event => {
   try {
     event.preventDefault();
 
+    loadMoreButtonEl.removeEventListener('click', onLoadMoreBtnClick);
+
     searchedQuery = event.currentTarget.elements.user_query.value.trim();
 
     if (searchedQuery === '') {
@@ -61,6 +63,7 @@ const onSearchFormSubmit = async event => {
       loadMoreButtonEl.classList.remove('is-hidden');
       loadMoreButtonEl.addEventListener('click', onLoadMoreBtnClick);
     }
+
     const galleryTemplate = response.data.hits
       .map(el => createGalleryCardTempplate(el))
       .join('');
@@ -94,8 +97,9 @@ const onLoadMoreBtnClick = async () => {
       .join('');
 
     galleryEl.insertAdjacentHTML('beforeend', galleryTemplate);
-    console.log(response);
-    if (page === response.data.totalHits) {
+
+    if (page >= response.data.totalHits / 15) {
+      //page * 15 >= response.data.totalHits
       loadMoreButtonEl.classList.add('is-hidden');
       loadMoreButtonEl.removeEventListener('click', onLoadMoreBtnClick);
       iziToast.info({

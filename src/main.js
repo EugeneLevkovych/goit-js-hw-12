@@ -81,6 +81,7 @@ const onSearchFormSubmit = async event => {
 };
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
+
 //----------------Load-more----------------------------
 const onLoadMoreBtnClick = async () => {
   try {
@@ -93,7 +94,7 @@ const onLoadMoreBtnClick = async () => {
       .join('');
 
     galleryEl.insertAdjacentHTML('beforeend', galleryTemplate);
-
+    console.log(response);
     if (page === response.data.totalHits) {
       loadMoreButtonEl.classList.add('is-hidden');
       loadMoreButtonEl.removeEventListener('click', onLoadMoreBtnClick);
@@ -104,6 +105,12 @@ const onLoadMoreBtnClick = async () => {
     }
 
     lightbox.refresh();
+    //-------------------------scrollBy--------------------------------
+    const galleryCards = document.querySelectorAll('.gallery-card');
+    if (galleryCards.length > 0) {
+      const cardHeight = galleryCards[0].getBoundingClientRect().height;
+      window.scrollBy({ top: cardHeight * 2, behavior: 'smooth' });
+    }
 
     loaderEl2.classList.add('is-hidden');
   } catch (err) {
